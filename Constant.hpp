@@ -10,5 +10,6 @@ int const T_START(0); //temps de début de simulation
 int const T_STOP(100); //temps de fin de simulation
 double const POTENTIEL_RESET(0.0); //reset du potentiel de membrane
 double const J(10.0); //potentiel qu'un neurone recoit par signal
+int const DELAY(15); //delay for receinving the post-synaptic potential
 //double const REAL_TIME(0.1);
 //double const REFRAC_STEP(REFRAC_TIME/DT); 

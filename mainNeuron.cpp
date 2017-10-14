@@ -1,4 +1,5 @@
 #include "Neuron.hpp"
+#include "Network.hpp"
 #include <fstream>
 #include <string>
 
@@ -33,18 +34,27 @@ int main()
 	std::string nom_de_fichier("potential_1.dat");
 	fichier.open(nom_de_fichier.c_str());
 	
+	std::ofstream fichier2;
+	std::string nom_de_fichier2("potential_2.dat");
+	fichier2.open(nom_de_fichier2.c_str());
+	
 	//on met à jour le potentiel tous les dt suivant l'intervalle de temps
 	//dans lequel il se trouve
 	while ( t < T_STOP){
 
 		if ( t < a or t>=b) { 
 			n1.updateState(DT, 0.0, n2);
+			//n2.updateState(DT, 0.0, n1);
 		}
 		else if ( t >= a and t < b) {
 			n1.updateState(DT, intensity, n2);
+			//n2.updateState(DT, 0.0, n1);
 		}
 		fichier << "V(" << t << ") = " << n1.getPotential() << std::endl;
+		//fichier2 << "V(" << t << ") = " << n2.getPotential() << std::endl;
+
 		t += DT;
 	}
 	fichier.close();
+	fichier2.close();
 }
