@@ -1,30 +1,40 @@
 #include "Neuron.hpp"
 
-Neuron::Neuron() : etat(false), buffer({0})
+Neuron::Neuron(Type x) : etat(false), buffer({0}), type(x)
 
 {
 	time_spikes.clear();
 	number_spikes = 0;
 }
 
+Neuron::~Neuron() {}
+/** getter
+ * @return le potentiel de la membrane
+ */
 double Neuron::getPotential() const
 { 
 	return membrane_pot; 
 }
 
-//retourne le nombre de spike
+/** getter
+ * @return le nombre de spike
+ */
 int Neuron::getNumberSpikes() const
 { 
 	return number_spikes; 
 }
 
-//retourne le temps
+/**
+ * @return retourne le temps
+ */
 std::list<double> Neuron::getTime() const
 { 
 	return time_spikes; 
 }
 
-//setter du buffer
+/**setter du buffer
+ * @param a number i for the index of the vector ad the potential
+ */
 std::array<double,29> Neuron::setBuffer(int i, double potential){
 	buffer[i] += potential;
 }
@@ -34,7 +44,7 @@ bool Neuron::getEtat(){
 	return etat;
 }
 
-void Neuron::updateState(double dt, double intensity, Neuron n){ 
+void Neuron::updateState(double dt, double intensity){ 
 	
 	//si c'est dans le temps réfractaire
 	if (refrac_time >= 0)
@@ -84,9 +94,9 @@ bool Neuron::isGettingMessage(Neuron n){
 /*change le buffer du Neuron en paramètre pour qu'il recoive le spike à
 un temps clock + delay on rajoute donc le potentiel post synaptic a son buffer
 */
-void Neuron::ifSendingMessage(Neuron n){
-	if (etat = true){
-		n.setBuffer(((clock + DELAY)%(int)buffer.size()), J);
+void Neuron::ifSendingMessage(Neuron* n){
+	if (getEtat() == true){
+		n->setBuffer(((int)(clock + (DELAY/REAL_TIME))%(int)buffer.size()), J);
 	}
 }
 	

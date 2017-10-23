@@ -6,10 +6,11 @@
 #include <array>
 #include "Constant.hpp"
 
+enum Type{EXCITATORY, INHIBITORY};
 
 class Neuron {
 	public:
-	Neuron();
+	Neuron(Type x);
 	~Neuron();
 	double getPotential() const;
 	int getNumberSpikes() const;
@@ -17,11 +18,11 @@ class Neuron {
 	bool getEtat();
 	std::array<double,29> setBuffer(int i, double potential);
 	
-	void updateState(double dt, double intensity, Neuron n);
+	void updateState(double dt, double intensity);
 	
 	bool isGettingMessage(Neuron n);
-	void ifSendingMessage(Neuron n);
-	
+	void ifSendingMessage(Neuron* n);
+
 	private:
 	bool etat;
 	int clock;
@@ -29,6 +30,7 @@ class Neuron {
 	double membrane_pot;
 	int number_spikes;
 	std::list<double> time_spikes;
+	Type type;
 	
 	std::array<double,29> buffer;
 };
