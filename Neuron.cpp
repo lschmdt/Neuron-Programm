@@ -1,13 +1,16 @@
 #include "Neuron.hpp"
-
+/**Neuron's constructor
+ */
 Neuron::Neuron(Type x) : etat(false), buffer({0}), type(x)
 
 {
 	time_spikes.clear();
 	number_spikes = 0;
 }
-
+/** Neuron's destructor
+ */
 Neuron::~Neuron() {}
+
 /** getter
  * @return le potentiel de la membrane
  */
@@ -39,11 +42,17 @@ std::array<double,29> Neuron::setBuffer(int i, double potential){
 	buffer[i] += potential;
 }
 
-//retourne si le neuron spike or not
-bool Neuron::getEtat(){
+/**
+ * @return si le neuron spike ou non
+ */
+bool Neuron::getEtat() const{
 	return etat;
 }
 
+/**update the potential of the neuron. It controls if it is refractory 
+ * or not and if it reachs a spike potential or not.
+ * @param dt is the time interval, intensity is the external intensity
+ */
 void Neuron::updateState(double dt, double intensity){ 
 	
 	//si c'est dans le temps réfractaire
@@ -95,7 +104,13 @@ bool Neuron::isGettingMessage(Neuron n){
 un temps clock + delay on rajoute donc le potentiel post synaptic a son buffer
 */
 void Neuron::ifSendingMessage(Neuron* n){
+	int J;
 	if (getEtat() == true){
+		if(type == EXCITATORY){
+			J=JE;
+		}else{
+			J=JI;
+		}
 		n->setBuffer(((int)(clock + (DELAY/REAL_TIME))%(int)buffer.size()), J);
 	}
 }

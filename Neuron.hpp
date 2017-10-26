@@ -15,7 +15,7 @@ class Neuron {
 	double getPotential() const;
 	int getNumberSpikes() const;
 	std::list<double> getTime() const;
-	bool getEtat();
+	bool getEtat() const;
 	std::array<double,29> setBuffer(int i, double potential);
 	
 	void updateState(double dt, double intensity);
@@ -28,9 +28,9 @@ class Neuron {
 	int clock;
 	double refrac_time;
 	double membrane_pot;
-	int number_spikes;
-	std::list<double> time_spikes;
-	Type type;
-	
+	int number_spikes; ///nombre de spikes fait dans l'intervalle donné
+	std::list<double> time_spikes; /// times when a Neuron spikes
+	Type type; ///type is exitatory or inhibiory
+
 	std::array<double,29> buffer;
 };

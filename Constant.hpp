@@ -14,6 +14,10 @@ double const JI(0.5);//potential to add if a neuron receive a message from inhib
 double const DELAY(1.5); //delay for receinving the post-synaptic potential
 int const G(5);
 int const TETA(20);
+int const CE(1000);
+int const CI(250);
+int const T_EXT(20);
+int const T_THR(2);
 
 double const REAL_TIME(0.1);
-///double const REFRAC_STEP(REFRAC_TIME/DT); 
+

@@ -1,4 +1,4 @@
-#include "Neuron.hpp"
+ #include "Neuron.hpp"
 #include "Network.hpp"
 #include <fstream>
 #include <string>
