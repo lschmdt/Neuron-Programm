@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <list>
+#include <vector>
 #include <array>
 #include "Constant.hpp"
 
@@ -14,14 +14,17 @@ class Neuron {
 	~Neuron();
 	double getPotential() const;
 	int getNumberSpikes() const;
-	std::list<double> getTime() const;
+	std::vector<double> getTime() const;
 	bool getEtat() const;
 	std::array<double,29> setBuffer(int i, double potential);
 	
-	void updateState(double dt, double intensity);
+	void updateState(int time, double intensity);
 	
-	bool isGettingMessage(Neuron n);
 	void ifSendingMessage(Neuron* n);
+	bool isRefractory();
+	
+	//for the simulation
+	void simulationLoopNeuron(int time_simul, int i_ext);
 
 	private:
 	bool etat;
@@ -29,7 +32,7 @@ class Neuron {
 	double refrac_time;
 	double membrane_pot;
 	int number_spikes; ///nombre de spikes fait dans l'intervalle donné
-	std::list<double> time_spikes; /// times when a Neuron spikes
+	std::vector<double> time_spikes; /// times when a Neuron spikes
 	Type type; ///type is exitatory or inhibiory
 
 	std::array<double,29> buffer;

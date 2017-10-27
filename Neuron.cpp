@@ -1,7 +1,8 @@
 #include "Neuron.hpp"
 /**Neuron's constructor
  */
-Neuron::Neuron(Type x) : etat(false), buffer({0}), type(x)
+Neuron::Neuron(Type x) : etat(false), refrac_time(0), membrane_pot(0),
+type(x), buffer({0}) 
 
 {
 	time_spikes.clear();
@@ -30,7 +31,7 @@ int Neuron::getNumberSpikes() const
 /**
  * @return retourne le temps
  */
-std::list<double> Neuron::getTime() const
+std::vector<double> Neuron::getTime() const
 { 
 	return time_spikes; 
 }
@@ -40,6 +41,14 @@ std::list<double> Neuron::getTime() const
  */
 std::array<double,29> Neuron::setBuffer(int i, double potential){
 	buffer[i] += potential;
+}
+
+/**
+ * to test if a Neuron is refractory or not
+ * @return true if it is and false if not 
+ */
+bool Neuron::isRefractory(){
+	return refrac_time != 0;
 }
 
 /**
@@ -53,19 +62,26 @@ bool Neuron::getEtat() const{
  * or not and if it reachs a spike potential or not.
  * @param dt is the time interval, intensity is the external intensity
  */
-void Neuron::updateState(double dt, double intensity){ 
-	
+void Neuron::updateState(int time, double intensity){ 
+	//si la membrane a un potentiel trop élevé
+	if(membrane_pot >= POTENTIEL_MAX){
+		membrane_pot = POTENTIEL_RESET;
+		time_spikes.push_back(time*REAL_TIME);
+		++number_spikes;
+		std::cout << time << ",   " << number_spikes << std::endl;
+		refrac_time = REFRAC_TIME;
+		etat = true;
+	}	
 	//si c'est dans le temps réfractaire
-	if (refrac_time >= 0)
+	if (isRefractory())
 	{
-		membrane_pot = 0.0;
-		refrac_time -= dt;
+		membrane_pot = POTENTIEL_RESET;///PAS NECESSAIIIIIRE
+		refrac_time -= DT;
 		return;
 	}
 	
-	
-	//calcul de la membrane en général
-	membrane_pot = exp(-dt/TAU)*membrane_pot + intensity*R*(1-exp(-dt/TAU));
+	// calcul de la membrane en général
+	membrane_pot = exp(-DT*0.1/TAU)*membrane_pot + intensity*R*(1-exp(-DT*0.1/TAU));
 	
 	/*si le buffer de son pas de temps clock contient un potentiel 
 	car il a recu un message d'un autre synapse
@@ -75,34 +91,17 @@ void Neuron::updateState(double dt, double intensity){
 		buffer[clock%(int)buffer.size()] = 0;
 	}
 	
-	//si la membrane a un potentiel trop élevé
-	if(membrane_pot >= POTENTIEL_MAX){
-		membrane_pot = POTENTIEL_RESET;
-		time_spikes.push_back(clock);
-		++number_spikes;
-		
-		refrac_time = REFRAC_TIME;
-		etat = true;
-		return;
-	}	
-	
-	clock += dt;
+
+	clock += DT;
 	etat = false;
 	
 }
 
-bool Neuron::isGettingMessage(Neuron n){
-	if (n.getEtat() == true){
-		return true;
-	}else{
-		return false;
-	}
-		
-}
-
-/*change le buffer du Neuron en paramètre pour qu'il recoive le spike à
-un temps clock + delay on rajoute donc le potentiel post synaptic a son buffer
-*/
+/**this method is useful to give a potential when two 
+ * neurons are connected. if the neuron who send the message (this) is
+ * Excitatory he send a JE and if it is an inhibitory it sends JI
+ * @param the receiving neuron
+ */
 void Neuron::ifSendingMessage(Neuron* n){
 	int J;
 	if (getEtat() == true){
@@ -115,8 +114,15 @@ void Neuron::ifSendingMessage(Neuron* n){
 	}
 }
 	
-	
-	
+/**make a Simulation loop for a given time. It helps for the test
+ */	
+void Neuron::simulationLoopNeuron(int time_simul, int i_ext){
+	int time(T_START);
+	while(time <= time_simul){
+		updateState(time, i_ext);
+		time += DT;
+	}
+}	
 	
 	
 	

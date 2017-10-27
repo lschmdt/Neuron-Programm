@@ -14,9 +14,11 @@ class Network {
 	Network();
 	~Network();
 	
-	void update(double dt, double intensity);
+	void update(int time, double intensity);
 	
 	void chooseRandomly(int a, int b, int connexion);
+	
+
 	
 	private:
 	std::vector<Neuron*> network;

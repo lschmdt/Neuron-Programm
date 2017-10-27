@@ -4,20 +4,25 @@
 #include <cmath>
 
 TEST (NeuronTest, MembranePotential){
-	Neuron neuron(EXCITATORY);
-	neuron.updateState(1, 1.01);
-	EXPECT_EQ(neuron.getPotential(), 0.0);
+	Neuron neuron1(EXCITATORY);
+	Neuron neuron2(EXCITATORY);
+	Neuron neuron3(EXCITATORY);
 	
-	neuron.updateState(56, 1.01);
-	EXPECT_NEAR(neuron.getPotential(), 18, 3);
-	//std::cout << neuron.getPotential() << " potential" << std::endl;
+	/*neuron.updateState(1868, 1.01);
+	EXPECT_EQ(neuron.getPotential(), 0.0);*/
 	
-	neuron.updateState(924, 1.01);
-	EXPECT_EQ(neuron.getPotential(), 0);
-
+	neuron1.simulationLoopNeuron(924, 1.01);
+	EXPECT_NEAR(neuron1.getPotential(), 20, 1);
+	
+	neuron2.simulationLoopNeuron(0, 1.01);
+	EXPECT_EQ(neuron2.getPotential(),0);
+	
+	neuron3.simulationLoopNeuron(925, 1.01);
+	EXPECT_EQ(neuron3.getPotential(), 0);
+	
 }
 
-TEST(NeuronTest, SpikesTest){
+TEST(NeuronTest, RefractoryTest){
 	Neuron neuron(EXCITATORY);
 	if(neuron.getEtat()==true){
 		EXPECT_EQ(neuron.getPotential(), 0.0);
@@ -26,9 +31,7 @@ TEST(NeuronTest, SpikesTest){
 
 TEST(NeuronTest, NumberSpike){
 	Neuron neuron(EXCITATORY);
-	for(int i(0); i < 50;++i){
-		neuron.updateState(i, 1.01);
-	}
+	neuron.simulationLoopNeuron(1000, 1.01);
 	EXPECT_EQ(neuron.getNumberSpikes(), 1);
 }
 

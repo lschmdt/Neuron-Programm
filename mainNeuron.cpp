@@ -38,10 +38,10 @@ int main(int argc, char **argv)
 	while ( t < T_STOP){
 
 		if ( t < a or t>=b) { 
-			n.update(DT, 0.0);
+			n.update(t, 0.0);
 		}
 		else if ( t >= a and t < b) {
-			n.update(DT, intensity);
+			n.update(t, intensity);
 		}
 		//fichier << "V(" << t << ") = " << n1.getPotential() << std::endl;
 		//fichier << "V(" << t << ") = " << n2.getPotential() << std::endl;
