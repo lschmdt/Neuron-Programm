@@ -7,43 +7,17 @@ Network::Network(){
 		elm = nullptr; 
 	}
 	
+
 	//complete the vector with new Neurons
-	for(int i(0); i < 10000; ++i){
+	for(int i(0); i < NE; ++i){
 		network.push_back(new Neuron(EXCITATORY));
 	}
 	
-	for(int i(0); i < 2500; ++i){
+	for(int i(0); i < NI; ++i){
 		network.push_back(new Neuron(INHIBITORY));
 	}
-	
-	for(size_t i(0); i < connexions.size(); ++i){
-		connexions[i].clear();
-	}
 
-	//choose the connexion randomly
-	for(size_t i(0); i < network.size(); ++i){
-		for(size_t j(0); j < network.size(); ++j){
-			chooseRandomly(0,10000,CE);
-			chooseRandomly(10000,12500,CI);
-			for(int z(0); z < 12500; ++z){
-				if (is_choosen[z] == true){
-					connexions[i][z] = true;
-				}else{
-					connexions[i][z] = false;
-				}
-			
-			}
-			is_choosen.empty();
-			
-			//Neuron can't connect itself
-			if(i==j){
-				connexions[i][j] = false;
-			}
-			
-			std::cout << connexions[i][j] << "   ";
-		}
-		std::cout << std::endl;
-	}
+	createConnexions();
 	
 }
 /** destructor of Network class
@@ -58,35 +32,79 @@ Network::~Network(){
 
 /**
  * This method updates our network
- * @param dt le parametre de temps and the intensitsy of the current
+ * @param time : time of the simulation 
+ * @param intensity : the external intensitsy of the current
  */
 void Network::update(int time, double intensity){
 	
-	for(size_t i(0); i < connexions.size(); ++i){
+	/*for(size_t i(0); i < connexions.size(); ++i){
 		for(size_t j(0); j< connexions[i].size(); ++j){
 			if(connexions[i][j] == 1){
 				network[j]->ifSendingMessage(network[i]);
 		}
 		network[i]->updateState(time,intensity);
 		}
-	}
-}
-		
-void Network::chooseRandomly(int a, int b, int connexion){
-	std::random_device rd;  
-    std::mt19937 gen(rd()); 
-    std::uniform_int_distribution<> dis(a, b);
-	int i(0);
-	
-	do{
-        if(is_choosen[dis(gen)] == false){
-		   is_choosen[dis(gen)] = 1;
-		   ++i;
-		   std::random_device rd;  
-		   std::mt19937 gen(rd());  
-		}	
-	} while (i < connexion);
-   
+	}*/
 }
 
+/** 
+ * to choose random numbers (connexion number) between two borns without taking himself 
+ * to prevent the same neuron two be connect with himself
+ * @param a : lowest born
+ * @param b : greatest born
+ * @param connexion : number of random numbers wanted
+ * @param x : number of the neuron to prevent to be connect with himself
+ * @return a vector<int> with all the choosen random numbers
+ */ 
+std::vector<int> Network::chooseRandomly(int a, int b, int connexion, int x){
+	std::default_random_engine randomGenerator; 
+    std::uniform_int_distribution<int> disNeuron(a, b);
+    std::vector<int> connect;
+    connect.clear(); //make sure ther is nothing inside
+	int i(0);
+	do{
+		int aleatory(0);
+		aleatory = disNeuron(randomGenerator);
+		if(aleatory != x){
+			connect.push_back(aleatory);
+			++i;
+		}
+	} while (i < connexion);
+	
+	return connect;
+   
+}
+/**
+@return the number of connexions there are in all our Network
+ */
+int Network::nbConnexion(){
+	int c;
+	for (size_t i(0); i< network.size(); ++i){
+				c += (int)network[i]->getTarget().size();
+	}
+	return c;
+}
+
+void simulationLoopNetwork(int time, int i_ext){
+}
+
+/**
+ * this function create exactly CE and CI connexions for all Neurons.
+ * It add targets in the vector of all the Neurons
+ */
+void Network::createConnexions(){
+	std::vector<int> a;
+	for(size_t i(0); i < network.size(); ++i){
+		a = chooseRandomly(0,NE,CE,i);
+		for (auto elm : a){
+			network[i]->addTarget(elm);
+		}
+		a.clear();
+		a=chooseRandomly(0+NE,NE+NI, CI, i);
+		for(auto elm : a){
+			network[i]->addTarget(elm);
+		}
+		a.clear();
+	}
+}
 

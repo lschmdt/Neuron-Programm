@@ -37,7 +37,8 @@ std::vector<double> Neuron::getTime() const
 }
 
 /**setter du buffer
- * @param a number i for the index of the vector ad the potential
+ * @param i : for the index of the vector
+ * @param potential : potential to add to the buffer[i]
  */
 std::array<double,29> Neuron::setBuffer(int i, double potential){
 	buffer[i] += potential;
@@ -60,7 +61,8 @@ bool Neuron::getEtat() const{
 
 /**update the potential of the neuron. It controls if it is refractory 
  * or not and if it reachs a spike potential or not.
- * @param dt is the time interval, intensity is the external intensity
+ * @param dt : the time interval
+ * @param intensity : the external intensity
  */
 void Neuron::updateState(int time, double intensity){ 
 	//si la membrane a un potentiel trop élevé
@@ -100,7 +102,7 @@ void Neuron::updateState(int time, double intensity){
 /**this method is useful to give a potential when two 
  * neurons are connected. if the neuron who send the message (this) is
  * Excitatory he send a JE and if it is an inhibitory it sends JI
- * @param the receiving neuron
+ * @param n :the receiving neuron
  */
 void Neuron::ifSendingMessage(Neuron* n){
 	int J;
@@ -123,8 +125,18 @@ void Neuron::simulationLoopNeuron(int time_simul, int i_ext){
 		time += DT;
 	}
 }	
-	
-	
+
+/** to add a connexion with an other Neuron
+ */
+void Neuron::addTarget(int i){
+	targets.push_back(i);
+}
+
+/** @return the vector of target that represent the connexions
+ */
+std::vector<int> Neuron::getTarget(){
+	return targets;
+}
 	
 	
 	

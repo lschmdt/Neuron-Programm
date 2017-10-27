@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <cmath>
-#include <list>
+#include <array>
 #include <vector>
+#include <list>
 #include <memory>
 #include <random>
 #include "Constant.hpp"
@@ -14,14 +15,16 @@ class Network {
 	Network();
 	~Network();
 	
+	int nbConnexion();
+	void createConnexions();
+	
 	void update(int time, double intensity);
 	
-	void chooseRandomly(int a, int b, int connexion);
-	
+	std::vector<int> chooseRandomly(int a, int b, int connexion, int x);
+	//std::vector<Neuron*> chooseRandomly(int a, int b, int connexion, int x);
 
+	void simulationLoopNetwork(int time, int i_ext);
 	
 	private:
-	std::vector<Neuron*> network;
-	std::vector<std::vector<int>> connexions;
-	std::array<bool, 12500> is_choosen;
+	std::vector<Neuron*> network; //!< neurons that are on the network
 };

@@ -18,6 +18,9 @@ int const CE(1000);
 int const CI(250);
 int const T_EXT(20);
 int const T_THR(2);
+int const NE(10000);
+int const NI(2500);
+int const N(NE+NI);
 
 double const REAL_TIME(0.1);
 
