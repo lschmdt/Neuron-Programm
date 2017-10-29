@@ -16,6 +16,7 @@ class Neuron {
 	int getNumberSpikes() const;
 	std::vector<double> getTime() const;
 	bool getEtat() const;
+	Type getType() const;
 	std::array<double,29> setBuffer(int i, double potential);
 	
 	void updateState(int time, double intensity);
@@ -28,7 +29,7 @@ class Neuron {
 	
 	//target test
 	void addTarget(int i);
-	std::vector<int> getTarget();
+	std::vector<int> getTarget() const;
 
 	private:
 	bool etat;	//!< Spiking or not

@@ -59,6 +59,13 @@ bool Neuron::getEtat() const{
 	return etat;
 }
 
+/**
+ * @return the type of the neuron (excitatory or inhibitory)
+ */
+Type Neuron::getType() const{
+	return type;
+}
+
 /**update the potential of the neuron. It controls if it is refractory 
  * or not and if it reachs a spike potential or not.
  * @param dt : the time interval
@@ -100,19 +107,19 @@ void Neuron::updateState(int time, double intensity){
 }
 
 /**this method is useful to give a potential when two 
- * neurons are connected. if the neuron who send the message (this) is
+ * neurons are connected. if the neuron who send the message (n) is
  * Excitatory he send a JE and if it is an inhibitory it sends JI
- * @param n :the receiving neuron
+ * @param n :the sending neuron
  */
 void Neuron::ifSendingMessage(Neuron* n){
 	int J;
-	if (getEtat() == true){
-		if(type == EXCITATORY){
+	if (n->getEtat() == true){
+		if(n->getType()== EXCITATORY){
 			J=JE;
 		}else{
 			J=JI;
 		}
-		n->setBuffer(((int)(clock + (DELAY/REAL_TIME))%(int)buffer.size()), J);
+		setBuffer(((int)(clock + (DELAY/REAL_TIME))%(int)buffer.size()), J);
 	}
 }
 	
@@ -134,9 +141,17 @@ void Neuron::addTarget(int i){
 
 /** @return the vector of target that represent the connexions
  */
-std::vector<int> Neuron::getTarget(){
+std::vector<int> Neuron::getTarget() const{
 	return targets;
 }
-	
+
+/*bool Neuron::isConnected(int i){
+	for (auto elm : targets){
+		if (elm = i){
+			return true;
+		}
+	}
+	return false;
+}*/
 	
 	

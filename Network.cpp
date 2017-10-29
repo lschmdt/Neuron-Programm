@@ -1,5 +1,6 @@
 #include "Network.hpp"
-
+/** constructor of Network class
+ */
 Network::Network(){
 	//clear the vector before utilization
 	for(auto& elm : network){
@@ -36,6 +37,16 @@ Network::~Network(){
  * @param intensity : the external intensitsy of the current
  */
 void Network::update(int time, double intensity){
+	//We need to update the network by updating all the Neurons 
+	//and control that they are connected or not
+	std::vector<int> connexions;
+	for(auto neuron : network){
+		connexions = neuron->getTarget();
+		for(auto connect : connexions){
+			neuron->ifSendingMessage(network[connect]);
+		}
+	}
+}
 	
 	/*for(size_t i(0); i < connexions.size(); ++i){
 		for(size_t j(0); j< connexions[i].size(); ++j){
@@ -45,7 +56,7 @@ void Network::update(int time, double intensity){
 		network[i]->updateState(time,intensity);
 		}
 	}*/
-}
+
 
 /** 
  * to choose random numbers (connexion number) between two borns without taking himself 

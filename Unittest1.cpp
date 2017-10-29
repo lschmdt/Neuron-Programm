@@ -9,8 +9,8 @@ TEST (NeuronTest, MembranePotential){
 	Neuron neuron2(EXCITATORY);
 	Neuron neuron3(EXCITATORY);
 	
-	/*neuron.updateState(1868, 1.01);
-	EXPECT_EQ(neuron.getPotential(), 0.0);
+	/*attention il faut faire une méthode upate 
+	 * sans le buffer !! sinon souvis 
 	* spikes : 924, 1868*/
 	
 	neuron1.simulationLoopNeuron(921, 1.01);
@@ -41,7 +41,11 @@ TEST(NetworkTest, NumberConnexions){
 	Network n;
 	EXPECT_EQ(n.nbConnexion(), 1250*12500);
 }
-	
+
+TEST(NeutworkTest, UpdateNetwork){
+	Network n;
+	n.update(300, 1.01);
+}
 
 int main(int argc, char**argv) 
 {
